@@ -1,0 +1,28 @@
+{
+  "name": "clementinejs-angular",
+  "version": "1.0.2",
+  "description": "The elegant and lightweight boilerplate for full stack JavaScript",
+  "main": "server.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/johnstonbl01/clementinejs-angular"
+  },
+  "homepage": "http://johnstonbl01.github.io/clementinejs/",
+  "bugs": "https://github.com/johnstonbl01/clementinejs-angular/issues",
+  "keywords": [
+    "MEAN",
+    "MongoDB",
+    "Express",
+    "Angular",
+    "Node",
+    "javascript",
+    "boilerplate"
+  ],
+  "author": "Blake Johnston",
+  "license": "MIT",
+  "dependencies": {
+    "dotenv": "^2.0.0",
+    "express": "^4.12.4",
+    "mongodb": "^2.0.33"
+  }
+}
