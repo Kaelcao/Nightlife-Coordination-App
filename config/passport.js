@@ -1,5 +1,6 @@
 var TwitterStrategy = require('passport-twitter').Strategy;
 var passport = require('passport');
+var ObjectID = require('mongodb').ObjectID;
 
 module.exports = function (db) {
     var users = db.collection('users');
@@ -36,17 +37,7 @@ module.exports = function (db) {
 
     // used to deserialize the user
     passport.deserializeUser(function (id, done) {
-        console.log("id: " + id);
-        users.findOne({
-            "_id": {
-                "$in": [
-                    {
-                        '$oid': id
-                    }
-                ]
-            }
-        }, function (user) {
-            console.log("deserial " + user);
+        users.findOne({_id: ObjectID(id)}, function (err,user) {
             done(null, user);
         });
     });

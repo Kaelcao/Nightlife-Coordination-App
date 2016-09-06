@@ -2,7 +2,7 @@
 
 var path = process.cwd();
 var MainController = require('../controllers/mainController.server');
-
+// var ObjectId = require('mongodb').ObjectID;
 module.exports = function (app, db, passport) {
 
     var mainController = new MainController(db);
@@ -24,9 +24,11 @@ module.exports = function (app, db, passport) {
             // Successful authentication, redirect home.
             res.redirect('/');
         });
+    app.get('/api/locations', mainController.getLocations);
+
     app.get('/test', function (req, res) {
-        // console.log(req.isAuthenticated());
-        res.send('done');
+        res.send('test');
     });
+
     app.get('/api/going', mainController.going);
 };

@@ -5,7 +5,7 @@
         .module('app', [])
         .controller('mainController',
             ['$scope', '$http', function ($scope, $http) {
-                $scope.search = "San Francisco";
+                $scope.search = "";
                 $scope.locations = [];
                 $scope.isLoading = false;
 
@@ -15,11 +15,27 @@
                         .then(
                             function (result) {
                                 var locations = result.data;
-                                $scope.locations = locations.map(function (location) {
-                                    location.count = 0;
-                                    return location;
-                                });
-                                $scope.isLoading = false;
+                                $http.get('/api/locations')
+                                    .then(
+                                        function (result) {
+                                            $scope.locations = locations.map(function (location) {
+                                                var temp = result.data;
+                                                if (!location.count) {
+                                                    location.count = 0;
+                                                }
+                                                for (var i = 0; i < temp.length; i++) {
+                                                    if (temp[i].locationId == location.id) {
+                                                        location.count += 1;
+                                                    }
+                                                }
+
+                                                return location;
+                                            });
+                                            $scope.isLoading = false;
+                                        }, function (err) {
+                                            throw(err)
+                                        });
+
                             },
                             function (err) {
                                 if (err) throw (err);
@@ -31,7 +47,6 @@
                     $scope.searchLocations();
                     localStorage.removeItem('search');
                 }
-
 
 
                 $scope.going = function (location) {

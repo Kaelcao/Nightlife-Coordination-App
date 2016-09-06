@@ -7,11 +7,18 @@ var yelp = new Yelp({
     token: '5QqZ9IfkcgwEwhsdOioSvrcI7hf-PrqV',
     token_secret: 'QP3DLr6-54aRgwf9cEvTWYpiZUI'
 });
-
+var ObjectId = require('mongodb').ObjectID;
 
 function MainController(db) {
     var users = db.collection('users');
     var locations = db.collection('locations');
+
+    this.getLocations = function (req, res) {
+        locations.find().toArray(function (err, locations) {
+            if (err) res.json(err);
+            res.json(locations);
+        });
+    };
 
     this.search = function (req, res) {
         var location = req.query.location;
@@ -26,17 +33,25 @@ function MainController(db) {
 
     this.going = function (req, res) {
         var locationId = req.query.locationId;
-        console.log(req.user);
-        console.log(req.isAuthenticated());
         if (req.isAuthenticated()) {
-            locations.insertOne({
-                locationId: locationId,
-                userId: req.user._id
-            }, function (err, result) {
-                if (err) res.json(err);
-                console.log(result);
-                res.json({count: 1});
+            locations.findOne({
+                userId: req.user._id,
+                locationId: locationId
+            }, function (err, location) {
+                if (location) {
+                    locations.deleteOne(location);
+                    res.json({count: -1})
+                } else {
+                    locations.insertOne({
+                        locationId: locationId,
+                        userId: req.user._id
+                    }, function (err, result) {
+                        if (err) res.json(err);
+                        res.json({count: 1});
+                    });
+                }
             });
+
         } else {
             res.json({count: 0});
         }
