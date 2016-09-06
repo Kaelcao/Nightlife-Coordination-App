@@ -4,7 +4,7 @@ var path = process.cwd();
 var ClickHandler = require(path + '/app/controllers/clickHandler.server.js');
 var MainController = require('../controllers/mainController.server');
 
-module.exports = function (app, db) {
+module.exports = function (app, db,passport) {
 
     var clickHandler = new ClickHandler(db);
     var mainController = new MainController(db);
@@ -13,7 +13,21 @@ module.exports = function (app, db) {
         .get(function (req, res) {
             res.sendFile(path + '/public/index.html');
         });
-    app.get('/api/search',mainController.search);
+
+    app.get('/logout', function(req, res) {
+        req.logout();
+        res.redirect('/');
+    });
+
+    app.get('/api/search', mainController.search);
+    app.get('/auth/twitter', passport.authenticate('twitter'));
+    app.get('/auth/twitter/callback',
+        passport.authenticate('twitter', {
+            successRedirect: '/',
+            failureRedirect: '/fail'
+        }));
+
+
     app.route('/api/users')
         .get(clickHandler.getClicks)
         .post(clickHandler.addClick)
