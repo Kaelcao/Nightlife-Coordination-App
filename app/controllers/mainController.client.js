@@ -15,29 +15,32 @@
                         .then(
                             function (result) {
                                 var locations = result.data;
-                                if (!locations) {
-                                    locations = [];
-                                }
-                                $http.get('/api/locations')
-                                    .then(
-                                        function (result) {
-                                            $scope.locations = locations.map(function (location) {
-                                                var temp = result.data;
-                                                if (!location.count) {
-                                                    location.count = 0;
-                                                }
-                                                for (var i = 0; i < temp.length; i++) {
-                                                    if (temp[i].locationId == location.id) {
-                                                        location.count += 1;
+                                if (!locations.length) {
+                                    alert(JSON.parse(locations.data).error.text);
+                                    $scope.isLoading = false;
+                                } else {
+                                    $http.get('/api/locations')
+                                        .then(
+                                            function (result) {
+                                                $scope.locations = locations.map(function (location) {
+                                                    var temp = result.data;
+                                                    if (!location.count) {
+                                                        location.count = 0;
                                                     }
-                                                }
+                                                    for (var i = 0; i < temp.length; i++) {
+                                                        if (temp[i].locationId == location.id) {
+                                                            location.count += 1;
+                                                        }
+                                                    }
 
-                                                return location;
+                                                    return location;
+                                                });
+                                                $scope.isLoading = false;
+                                            }, function (err) {
+                                                throw(err)
                                             });
-                                            $scope.isLoading = false;
-                                        }, function (err) {
-                                            throw(err)
-                                        });
+                                }
+
 
                             },
                             function (err) {
