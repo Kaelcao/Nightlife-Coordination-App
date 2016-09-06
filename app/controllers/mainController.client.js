@@ -15,6 +15,9 @@
                         .then(
                             function (result) {
                                 var locations = result.data;
+                                if (!locations) {
+                                    locations = [];
+                                }
                                 $http.get('/api/locations')
                                     .then(
                                         function (result) {
