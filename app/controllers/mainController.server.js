@@ -8,8 +8,10 @@ var yelp = new Yelp({
     token_secret: 'QP3DLr6-54aRgwf9cEvTWYpiZUI'
 });
 
+
 function MainController(db) {
     var users = db.collection('users');
+    var locations = db.collection('locations');
 
     this.search = function (req, res) {
         var location = req.query.location;
@@ -20,7 +22,24 @@ function MainController(db) {
             .catch(function (err) {
                 res.json(err);
             });
+    };
 
+    this.going = function (req, res) {
+        var locationId = req.query.locationId;
+        console.log(req.user);
+        console.log(req.isAuthenticated());
+        if (req.isAuthenticated()) {
+            locations.insertOne({
+                locationId: locationId,
+                userId: req.user._id
+            }, function (err, result) {
+                if (err) res.json(err);
+                console.log(result);
+                res.json({count: 1});
+            });
+        } else {
+            res.json({count: 0});
+        }
     }
 }
 
