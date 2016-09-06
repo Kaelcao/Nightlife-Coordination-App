@@ -36,8 +36,18 @@ module.exports = function (db) {
 
     // used to deserialize the user
     passport.deserializeUser(function (id, done) {
-        users.findOne({_id: id}, function (err, user) {
-            done(err, user);
+        console.log("id: " + id);
+        users.findOne({
+            "_id": {
+                "$in": [
+                    {
+                        '$oid': id
+                    }
+                ]
+            }
+        }, function (user) {
+            console.log("deserial " + user);
+            done(null, user);
         });
     });
     return passport;

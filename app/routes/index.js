@@ -25,7 +25,7 @@ module.exports = function (app, db, passport) {
             res.redirect('/');
         });
     app.get('/test', function (req, res) {
-        console.log(req.isAuthenticated());
+        // console.log(req.isAuthenticated());
         res.send('done');
     });
     app.get('/api/going', mainController.going);
